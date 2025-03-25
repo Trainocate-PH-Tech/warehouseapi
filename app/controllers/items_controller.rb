@@ -1,4 +1,16 @@
 class ItemsController < ApplicationController
+  def delete
+    item = Item.find_by_id(params[:id])
+
+    if item.blank?
+      render json: { message: "not found" }, status: :not_found
+    else
+      item.destroy!
+
+      render json: { message: "ok" }
+    end
+  end
+
   def create
     cmd = ::Items::Save.new(
       name: params[:name],
