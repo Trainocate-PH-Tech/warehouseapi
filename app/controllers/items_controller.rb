@@ -1,4 +1,20 @@
 class ItemsController < ApplicationController
+  def create
+    cmd = ::Items::Save.new(
+      name: params[:name],
+      category: params[:category],
+      quantity: params[:quantity]
+    )
+
+    cmd.execute!
+
+    if cmd.valid?
+      render json: cmd.item
+    else
+      render json: cmd.errors, status: :unprocessable_entity
+    end
+  end
+
   def index
     items = Item.all
 
