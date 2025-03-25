@@ -1,6 +1,12 @@
 class ItemsController < ApplicationController
   def index
-    items = Item.all.map{ |item|
+    items = Item.all
+
+    if params[:q]
+      items = items.where("LOWER(name) LIKE ?", "%#{params[:q]}%".downcase)
+    end
+
+    items = items.map{ |item|
       {
         id: item.id,
         name: item.name,
