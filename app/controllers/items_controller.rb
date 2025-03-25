@@ -6,6 +6,10 @@ class ItemsController < ApplicationController
       items = items.where("LOWER(name) LIKE ?", "%#{params[:q]}%".downcase)
     end
 
+    if params[:category].present?
+      items = items.where(category: params[:category])
+    end
+
     items = items.map{ |item|
       {
         id: item.id,
