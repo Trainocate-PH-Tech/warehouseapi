@@ -1,4 +1,19 @@
 class ItemsController < ApplicationController
+  def show
+    item = Item.find_by_id(params[:id])
+
+    if item.blank?
+      render json: { message: "not found" }, status: :not_found
+    else
+      render json: {
+        id: item.id,
+        name: item.name,
+        category: item.category,
+        quantity: item.quantity
+      }
+    end
+  end
+
   def delete
     item = Item.find_by_id(params[:id])
 
