@@ -3,10 +3,12 @@ module Items
     attr_reader :item, :errors
 
     def initialize(
+      item: nil,
       name:,
       category:,
       quantity:
     )
+      @item = item
       @name = name
       @category = category
       @quantity = quantity
@@ -24,11 +26,25 @@ module Items
       validate!
       
       if valid?
-        @item = Item.new(
-          name: @name,
-          category: @category,
-          quantity: @quantity
-        )
+        if @item.new_record?
+          @item = Item.new(
+            name: @name,
+            category: @category,
+            quantity: @quantity
+          )
+        else
+          if @name.present?
+            @item.name = @name
+          end
+
+          if @category.present?
+            @item.category = @category
+          end
+
+          if @quantity.present?
+            @item.quantity = @quantity
+          end
+        end
 
         @item.save!
       end

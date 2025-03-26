@@ -1,4 +1,27 @@
 class ItemsController < ApplicationController
+  def update
+    item = Item.find_by_id(params[:id])
+
+    if item.blank?
+      render json: { message: "not found" }, status: :not_found
+    else
+      cmd = ::Items::Save.new(
+        item: item,
+        name: params[:name],
+        category: params[:category],
+        quantity: params[:quantity]
+      )
+
+      cmd.execute!
+
+      if cmd.valid?
+        render json: cmd.item
+      else
+        render json: cmd.errors, status: :unprocessable_entity
+      end
+    end
+  end
+
   def show
     item = Item.find_by_id(params[:id])
 
